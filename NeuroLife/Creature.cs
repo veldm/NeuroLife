@@ -365,7 +365,7 @@ namespace NeuroLife
                 //int epoch = 1;
 
                 // Прогоняем НС по всем созданым наборам
-                network.Train(trainingSets, 100);
+                network.Train(trainingSets, 1000);
                 //double old = 9999, delta;
                 //do
                 //{
