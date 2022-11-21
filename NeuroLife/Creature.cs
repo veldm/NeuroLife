@@ -357,7 +357,7 @@ namespace NeuroLife
                 IMLDataSet trainingSet =
                     new Encog.ML.Data.Basic.BasicMLDataSet(InputData, SenseData);
                 IMLTrain train = new Encog.Neural.Networks.Training.
-                    Propagation.Resilient.ResilientPropagation(network, trainingSet);
+                    Propagation.Back.Backpropagation(network, trainingSet);
 
                 int epoch = 1;
 
@@ -370,7 +370,7 @@ namespace NeuroLife
                     delta = Math.Abs(old - train.Error);
                     old = train.Error;
                 }
-                while (train.Error > 0.0001 && epoch < 3000 && delta > 0.00001);
+                while (epoch < 1000 && delta > 0.00001);
 
                 train.FinishTraining();
 
