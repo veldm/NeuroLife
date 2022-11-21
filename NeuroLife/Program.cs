@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Encog;
 
 namespace NeuroLife
 {
@@ -74,8 +73,6 @@ namespace NeuroLife
                 }
             }
             while (!stop);
-
-            EncogFramework.Instance.Shutdown();
         }
     }
 }

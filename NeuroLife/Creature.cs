@@ -1,7 +1,6 @@
-﻿using System;
+﻿using NeuralNetwork;
+using System;
 using System.Collections.Generic;
-using Encog.ML.Train;
-using Encog.ML.Data;
 
 namespace NeuroLife
 {
@@ -49,7 +48,7 @@ namespace NeuroLife
         /// Собственно нейросеть<para/>
         /// "Мозг" существа
         /// </summary>
-        Encog.Neural.Networks.BasicNetwork network = new Encog.Neural.Networks.BasicNetwork();
+        NeuralNetwork.NeuralNet network;
 
         readonly Random rnd = new Random((int)(DateTime.Now.Ticks % int.MaxValue));
 
@@ -74,33 +73,34 @@ namespace NeuroLife
             ident = _ident;
             moverLeft = moverRight = moverBottom = moverTop = 0.0;
             sensorLeft = sensorRight = sensorBottom = sensorTop = 0.0;
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer(null, true, 4));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
-            network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
-                (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, 4));
-            network.Structure.FinalizeStructure();
-            network.Reset();
+            network = new NeuralNetwork.NeuralNet(4, rnd.Next(10), 4, 5);
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer(null, true, 4));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
+            //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
+            //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), false, 4));
+            //network.Structure.FinalizeStructure();
+            //network.Reset();
             World = world;
         }
 
@@ -119,23 +119,25 @@ namespace NeuroLife
             }
 
             // Принять решение о направлении следующего шага исходя из данных об окружении
-            double[][] Input = { new double[] { 0, 0, 0, 0 } };
-            IMLDataSet trainingSet;
-            if (nearestNeighbour.powerIndex > powerIndex)
-            {
-                double[][] SenseData = { new double[] { 0, 0, 0, 0 } };
-                trainingSet = new Encog.ML.Data.Basic.BasicMLDataSet(Input, SenseData);
-            }
-            else
-            {
-                double[][] SenseData = { new double[] { 1, 1, 1, 1 } };
-                trainingSet = new Encog.ML.Data.Basic.BasicMLDataSet(Input, SenseData);
-            }
-            IMLData output = network.Compute(trainingSet[0].Ideal);
+            double[] Data = { sensorLeft, sensorRight, sensorBottom, sensorTop };
+            double[] output = network.Compute(Data);
             moverLeft = output[0];
             moverRight = output[1];
             moverBottom = output[2];
             moverTop = output[3];
+            //double[] Input = new double[] { 0, 0, 0, 0 };
+            //DataSet trainingSet;
+            //if (nearestNeighbour.powerIndex > powerIndex)
+            //{
+            //    double[] SenseData = new double[] { 0, 0, 0, 0 };
+            //    trainingSet = new DataSet(Input, SenseData);
+            //}
+            //else
+            //{
+            //    double[] SenseData = new double[] { 1, 1, 1, 1 };
+            //    trainingSet = new DataSet(Input, SenseData);
+            //}
+
 
         }
 
@@ -207,10 +209,6 @@ namespace NeuroLife
                                     {
                                         nearestNeighbour.experienceIndex = 5;
                                     }
-                                    //x = (rnd.NextDouble()+x)/2;
-                                    //y = (rnd.NextDouble()+y)/2;
-                                    //life.x = (rnd.NextDouble() + 0.04 + life.x) / 2;
-                                    //life.y = (rnd.NextDouble() + 0.04 + life.y) / 2;
                                 }
                             }
                         }
@@ -344,43 +342,49 @@ namespace NeuroLife
         {
             if (Memory.Count > 0)
             {
-                network.Reset();
-                double[][] InputData = new double[Memory.Count][];
-                double[][] SenseData = new double[Memory.Count][];
-                for (int i = 0; i < Memory.Count; i++)
-                {
-                    InputData[i] = Memory[i];
-                    SenseData[i] = MemorySense[i];
-                }
+                //network.Reset();
+                //double[][] InputData = new double[Memory.Count][];
+                //double[][] SenseData = new double[Memory.Count][];
+                //for (int i = 0; i < Memory.Count; i++)
+                //{
+                //    InputData[i] = Memory[i];
+                //    SenseData[i] = MemorySense[i];
+                //}
 
                 // Создаём тренировочные наборы
-                IMLDataSet trainingSet =
-                    new Encog.ML.Data.Basic.BasicMLDataSet(InputData, SenseData);
-                IMLTrain train = new Encog.Neural.Networks.Training.
-                    Propagation.Resilient.ResilientPropagation(network, trainingSet);
+                List<DataSet> trainingSets = new List<DataSet>();
+                for (int i = 0; i < Memory.Count; i++)
+                {
+                    trainingSets.Add(new DataSet(Memory[i], MemorySense[i]));
+                }
+                //IMLDataSet trainingSet =
+                //    new Encog.ML.Data.Basic.BasicMLDataSet(InputData, SenseData);
+                //IMLTrain train = new Encog.Neural.Networks.Training.
+                //    Propagation.Resilient.ResilientPropagation(network, trainingSet);
 
-                int epoch = 1;
+                //int epoch = 1;
 
                 // Прогоняем НС по всем созданым наборам
-                double old = 9999, delta;
-                do
-                {
-                    train.Iteration();
-                    epoch++;
-                    delta = Math.Abs(old - train.Error);
-                    old = train.Error;
-                }
-                while (train.Error > 0.0001 && epoch < 3000 && delta > 0.00001);
+                network.Train(trainingSets, 100);
+                //double old = 9999, delta;
+                //do
+                //{
+                //    train.Iteration();
+                //    epoch++;
+                //    delta = Math.Abs(old - train.Error);
+                //    old = train.Error;
+                //}
+                //while (train.Error > 0.0001 && epoch < 3000 && delta > 0.00001);
 
-                train.FinishTraining();
+                //train.FinishTraining();
 
-                double sumd = 0;
-                foreach (IMLDataPair pair in trainingSet)
-                {
-                    IMLData output = network.Compute(pair.Input);
-                    sumd += Math.Abs(pair.Ideal[0] - output[0]);
-                    sumd /= trainingSet.InputSize;
-                }
+                //double sumd = 0;
+                //foreach (IMLDataPair pair in trainingSet)
+                //{
+                //    IMLData output = network.Compute(pair.Input);
+                //    sumd += Math.Abs(pair.Ideal[0] - output[0]);
+                //    sumd /= trainingSet.InputSize;
+                //}
             }
         }
     }

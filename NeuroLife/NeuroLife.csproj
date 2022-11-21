@@ -56,5 +56,11 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NeuralNetwork_2\NeuralNetwork.csproj">
+      <Project>{c9e20b35-2073-4a1d-be0d-75ed311d0856}</Project>
+      <Name>NeuralNetwork</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
