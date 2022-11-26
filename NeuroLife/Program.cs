@@ -36,6 +36,7 @@ namespace NeuroLife
                     Creature.identSymbols[rnd.Next(0, Creature.identSymbols.Length)]);
                 world.Add(creature);
             }
+            int c = 0;
             do
             {
                 try
@@ -72,7 +73,7 @@ namespace NeuroLife
                         writer.Close();
 #endif
                     }
-                    if (rnd.NextDouble() < 0.0333)
+                    if (rnd.NextDouble() < 0.01)
                     {
                         Creature newLife = new Creature(world, rnd.NextDouble(), rnd.NextDouble(),
                             Creature.identSymbols[rnd.Next(0, Creature.identSymbols.Length)]);

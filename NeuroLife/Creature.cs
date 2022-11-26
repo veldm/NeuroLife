@@ -161,7 +161,7 @@ namespace NeuroLife
                             {
                                 mind = d;
                                 nearestNeighbour = life;
-                                if (d < 0.03)
+                                if (d < 0.1)
                                 {
                                     if (rnd.NextDouble() > 0.5)
                                     {
