@@ -48,7 +48,7 @@ namespace NeuroLife
         /// Собственно нейросеть<para/>
         /// "Мозг" существа
         /// </summary>
-        NeuralNetwork.NeuralNet network;
+        public NeuralNet network;
 
         readonly Random rnd = new Random((int)(DateTime.Now.Ticks % int.MaxValue));
 
@@ -73,7 +73,7 @@ namespace NeuroLife
             ident = _ident;
             moverLeft = moverRight = moverBottom = moverTop = 0.0;
             sensorLeft = sensorRight = sensorBottom = sensorTop = 0.0;
-            network = new NeuralNetwork.NeuralNet(4, rnd.Next(10), 4, 5);
+            network = new NeuralNet(4, rnd.Next(10), 4, 5);
             //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer(null, true, 4));
             //network.AddLayer(new Encog.Neural.Networks.Layers.BasicLayer
             //    (new Encog.Engine.Network.Activation.ActivationSigmoid(), true, rnd.Next(100) + 10));
@@ -365,7 +365,7 @@ namespace NeuroLife
                 //int epoch = 1;
 
                 // Прогоняем НС по всем созданым наборам
-                network.Train(trainingSets, 1000);
+                network.Train(trainingSets, 0.01);
                 //double old = 9999, delta;
                 //do
                 //{

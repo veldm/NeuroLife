@@ -9,6 +9,7 @@ namespace NeuralNetwork
 	{
 		public double LearnRate { get; set; }
 		public double Momentum { get; set; }
+		public double LastError { get; set; }
 		public List<Neuron> InputLayer { get; set; }
 		public List<List<Neuron>> HiddenLayers { get; set; }
 		public List<Neuron> OutputLayer { get; set; }
@@ -101,7 +102,8 @@ namespace NeuralNetwork
 		private double CalculateError(params double[] targets)
 		{
 			var i = 0;
-			return OutputLayer.Sum(a => Math.Abs((float)a.CalculateError(targets[i++])));
+			LastError = OutputLayer.Sum(a => Math.Abs((float)a.CalculateError(targets[i++])));
+			return LastError;
 		}
 
 		public static double GetRandom()

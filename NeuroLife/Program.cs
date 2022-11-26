@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace NeuroLife
 {
@@ -12,6 +13,11 @@ namespace NeuroLife
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;
+#if DEBUG
+            StreamWriter writer = new StreamWriter("..\\..\\Log.txt", false);
+            writer.Write("");
+            writer.Close();
+#endif
             //Console.WriteLine(Creature.identSymbols);
             //Console.ReadKey();
             bool stop = false;
@@ -58,6 +64,13 @@ namespace NeuroLife
                             _ => ConsoleColor.Red
                         };
                         Console.Write(creature.ident);
+#if DEBUG
+                        writer = new StreamWriter("..\\..\\Log.txt", true);
+                        writer.Write($"\r\nid:{creature.id}," +
+                            $" HL_size:{creature.network.HiddenLayers[0].Count}, " +
+                            $"Last_error:{creature.network.LastError}");
+                        writer.Close();
+#endif
                     }
                     if (rnd.NextDouble() < 0.0333)
                     {
